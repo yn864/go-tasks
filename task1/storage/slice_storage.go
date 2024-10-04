@@ -13,7 +13,7 @@ type SliceStorage struct {
 	booksContainer []SliceStorageObject
 }
 
-func CreateSliceStorage() SliceStorage {
+func NewSliceStorage() SliceStorage {
 	return SliceStorage{[]SliceStorageObject{}}
 }
 
@@ -34,11 +34,4 @@ func (s *SliceStorage) RebuildId(idRelations map[int]int) {
 	for _, object := range s.booksContainer {
 		object.id = idRelations[object.id]
 	}
-}
-
-func (s *SliceStorage) Migrate(newStorage *Storage) {
-	for _, object := range s.booksContainer {
-		(*newStorage).AddBook(object.book, object.id)
-	}
-	s.booksContainer = nil
 }

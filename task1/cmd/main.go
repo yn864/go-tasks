@@ -18,43 +18,43 @@ func TimeIdGen(title string) int {
 }
 
 func main() {
-	book := types.Book{Title: "Don Quixote", Author: "Miguel de Cervantes", PageCount: 1072}
-	anotherBook := types.Book{Title: "The Lord of the Rings", Author: "John Ronald Reuel Tolkien", PageCount: 1178}
+	book := types.Book{Title: "Don Quixote", Author: "Miguel de Cervantes"}
+	anotherBook := types.Book{Title: "The Lord of the Rings", Author: "John Ronald Reuel Tolkien"}
 
-	sliceStorage := storage.CreateSliceStorage()
-	library := library.BuildSimpleLib(&sliceStorage, RandomIdGen)
+	sliceStorage := storage.NewSliceStorage()
+	library1 := library.NewSimpleLib(&sliceStorage, RandomIdGen)
 
-	library.AddBook(book)
-	library.AddBook(anotherBook)
+	library1.AddBook(book)
+	library1.AddBook(anotherBook)
 
-	searchResult1, status1 := library.Search("Don Quixote")
-	_, status2 := library.Search("Evgenii Onegin")
+	book1, err1 := library1.Search("Don Quixote")
+	_, err2 := library1.Search("Evgenii Onegin")
 
-	if status1 {
-		fmt.Println(searchResult1.Author)
+	if err1 {
+		fmt.Println(book1.Author)
 	}
 
-	if !status2 {
+	if !err2 {
 		fmt.Println("couldn't find it((")
 	}
 
-	library.SetIdGen(TimeIdGen)
+	library1.SetIdGen(TimeIdGen)
 
-	searchResult3, status3 := library.Search("The Lord of the Rings")
+	book3, err3 := library1.Search("The Lord of the Rings")
 
-	if status3 {
-		fmt.Println(searchResult3.PageCount)
+	if err3 {
+		fmt.Println(book3.Title)
 	}
 
-	mapStorage := storage.CreateMapStorage()
-	library.SetStorage(&mapStorage)
+	mapStorage := storage.NewMapStorage()
+	library2 := library.NewSimpleLib(&mapStorage, RandomIdGen)
 
-	oneMoreBook := types.Book{Title: "One Hundred Years of Solitude", Author: "Gabriel García Márquez", PageCount: 448}
-	library.AddBook(oneMoreBook)
+	oneMoreBook := types.Book{Title: "One Hundred Years of Solitude", Author: "Gabriel García Márquez"}
+	library2.AddBook(oneMoreBook)
 
-	searchResult4, status4 := library.Search("One Hundred Years of Solitude")
+	book4, err4 := library2.Search("One Hundred Years of Solitude")
 
-	if status4 {
-		fmt.Println(searchResult4.Author)
+	if err4 {
+		fmt.Println(book4.Author)
 	}
 }

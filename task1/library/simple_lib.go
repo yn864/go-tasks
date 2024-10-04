@@ -6,28 +6,23 @@ import (
 )
 
 type SimpleLib struct {
-	currStorage *storage.Storage
+	storage storage.Storage
 	currIdGen   func(string) int
 	idContainer map[string]int
 }
 
-func BuildSimpleLib(newStorage storage.Storage, newIdGen func(string) int) SimpleLib {
-	return SimpleLib{&newStorage, newIdGen, make(map[string]int)}
+func NewSimpleLib(newStorage storage.Storage, newIdGen func(string) int) SimpleLib {
+	return SimpleLib{newStorage, newIdGen, make(map[string]int)}
 }
 
 func (l *SimpleLib) AddBook(newBook types.Book) {
 	newId := l.currIdGen(newBook.Title)
 	l.idContainer[newBook.Title] = newId
-	(*l.currStorage).AddBook(newBook, newId)
+	(l.storage).AddBook(newBook, newId)
 }
 
 func (l *SimpleLib) Search(title string) (types.Book, bool) {
-	return (*l.currStorage).Search(l.idContainer[title])
-}
-
-func (l *SimpleLib) SetStorage(newStorage storage.Storage) {
-	(*l.currStorage).Migrate(&newStorage)
-	l.currStorage = &newStorage
+	return (l.storage).Search(l.idContainer[title])
 }
 
 func (l *SimpleLib) SetIdGen(newIdGen func(string) int) {
@@ -36,5 +31,5 @@ func (l *SimpleLib) SetIdGen(newIdGen func(string) int) {
 	for key, value := range l.idContainer {
 		idRelations[value] = newIdGen(key)
 	}
-	(*l.currStorage).RebuildId(idRelations)
+	(l.storage).RebuildId(idRelations)
 }

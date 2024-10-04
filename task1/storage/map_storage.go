@@ -8,7 +8,7 @@ type MapStorage struct {
 	booksContainer map[int]types.Book
 }
 
-func CreateMapStorage() MapStorage {
+func NewMapStorage() MapStorage {
 	return MapStorage{make(map[int]types.Book)}
 }
 
@@ -25,11 +25,4 @@ func (s *MapStorage) RebuildId(idRelations map[int]int) {
 	for oldId, newId := range idRelations {
 		s.booksContainer[oldId] = s.booksContainer[newId]
 	}
-}
-
-func (s *MapStorage) Migrate(newStorage *Storage) {
-	for id, book := range s.booksContainer {
-		(*newStorage).AddBook(book, id)
-	}
-	s.booksContainer = nil
 }
