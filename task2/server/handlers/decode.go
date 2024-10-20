@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/base64"
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -25,12 +26,15 @@ func Decode(w http.ResponseWriter, r *http.Request) {
 
 	decodedRawBytes, err := base64.StdEncoding.DecodeString(clientMessage.Input)
 	if err != nil {
-		panic(err)
+		log.Fatal()
 	}
 
 	serverResponse := OutputString{
 		Output: string(decodedRawBytes),
 	}
 
-	json.NewEncoder(w).Encode(serverResponse)
+	err = json.NewEncoder(w).Encode(serverResponse)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
 }
