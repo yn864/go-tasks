@@ -15,15 +15,11 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	select {
-	case <-time.After(11 * time.Second):
-		fmt.Println("error occurred")
-	case <-ctx.Done():
-		err := server.Close(ctx, serv)
+	<-ctx.Done()
+	err := server.Close(ctx, serv)
 
-		if err != nil {
-			fmt.Println("couldn't shut server down")
-		}
+	if err != nil {
+		fmt.Println("couldn't shut server down")
 	}
 
 	fmt.Println("server closed")
